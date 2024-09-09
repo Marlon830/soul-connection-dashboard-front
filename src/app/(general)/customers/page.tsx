@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import Spin from '@/components/spin';
 import { useCheckAuth } from '@/utils/auth';
 import axios from 'axios';
-import CustomerSelect from '@/app/general/customers/customer-select';
+import CustomerSelect from '@/app/(general)/customers/customer-select';
 import CustomerInfo from './customer-info';
 import CustomerMeetings from './customer-meetings';
 import CustomerPayments from './customer-payments';
