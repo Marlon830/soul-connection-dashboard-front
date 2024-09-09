@@ -1,0 +1,39 @@
+.small-screen-text {
+  @media (max-height: 950px) {
+    font-size: 0.8rem;
+  }
+}
+
+.small-screen-icon {
+  @media (max-height: 950px) {
+    width: 20px;
+    height: 20px;
+  }
+}
+
+.logo-icon {
+  @media (max-height: 950px) {
+    width: 75px;
+    height: 75px;
+  }
+}
+
+.logo-icon-collapsed {
+  @media (max-height: 950px) {
+    width: 30px;
+    height: 30px;
+  }
+}
+
+.div-items {
+  @media (max-height: 950px) {
+    margin-top: 0;
+  }
+}
+
+.link-items {
+  @media (max-height: 950px) {
+    padding-top: 0.75rem;
+    padding-bottom: 0.75rem;
+  }
+}
