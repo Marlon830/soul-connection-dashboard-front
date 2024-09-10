@@ -3,18 +3,18 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import axios from 'axios';
-import { useCheckAuth } from '@/utils/auth';
+import { useCheckAuth } from '@utils/auth';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { FaTrashAlt } from 'react-icons/fa';
 
-import Spin from "@/components/spin";
+import Spin from "@components/spin";
 
 import CustomersModal from './coachesCustomersModal';
 import CreateEmployeeModal from './coachesCreateEmployeeModal';
 import DeleteCoachModal from './coachesDeleteCoachModal';
-import { Customer } from '@/utils/customer';
-import { Employee } from '@/utils/employee';
+import { Customer } from '@utils/customer';
+import { Employee } from '@utils/employee';
 
 interface EmployeeError {
   email: string;

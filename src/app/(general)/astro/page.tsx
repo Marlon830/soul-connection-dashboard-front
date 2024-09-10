@@ -1,10 +1,10 @@
 "use client";
 
 import { useState, useEffect } from 'react';
-import Spin from '@/components/spin';
-import { useCheckAuth } from '@/utils/auth';
-import { checkCompatibility, ZodiacSign } from '@/utils/astroCompatibility';
-import { Customer, getCustomers } from '@/utils/customer';
+import Spin from '@components/spin';
+import { useCheckAuth } from '@utils/auth';
+import { checkCompatibility, ZodiacSign } from '@utils/astroCompatibility';
+import { Customer, getCustomers } from '@utils/customer';
 import CustomerSelect from '../customers/customer-select';
 
 const AstroPage = () => {

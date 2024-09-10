@@ -1,11 +1,11 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useCheckAuth } from "@/utils/auth";
+import { useCheckAuth } from "@utils/auth";
 import { FaUser, FaUsers, FaCalendarAlt, FaSmile, FaStar } from "react-icons/fa";
 import { motion } from "framer-motion";
 import axios from "axios";
-import Spin from "@/components/spin";
+import Spin from "@components/spin";
 
 export default function Home() {
   const workName = useCheckAuth();

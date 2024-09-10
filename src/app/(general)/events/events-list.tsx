@@ -1,4 +1,4 @@
-import { EmployeeEvent } from "@/utils/employee";
+import { EmployeeEvent } from "@utils/employee";
 
 export default function EventsList({ eventsData, setSelectedLocation }: { eventsData: EmployeeEvent[], setSelectedLocation: Function }) {
   if (!eventsData) return null;

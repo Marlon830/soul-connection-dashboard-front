@@ -1,13 +1,13 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import Spin from "@/components/spin";
-import { useCheckAuth } from "@/utils/auth";
+import Spin from "@components/spin";
+import { useCheckAuth } from "@utils/auth";
 import axios from "axios";
 import "leaflet/dist/leaflet.css";
 import MapDisplay from "./map-display";
 import EventsList from "./events-list";
-import { EmployeeEvent } from "@/utils/employee";
+import { EmployeeEvent } from "@utils/employee";
 
 delete L.Icon.Default.prototype._getIconUrl;
 L.Icon.Default.mergeOptions({

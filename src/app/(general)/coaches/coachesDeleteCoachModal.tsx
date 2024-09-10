@@ -1,4 +1,4 @@
-import { Employee } from '@/utils/employee';
+import { Employee } from '@utils/employee';
 import React from 'react';
 import Modal from 'react-modal';
 

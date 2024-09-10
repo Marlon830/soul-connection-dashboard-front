@@ -1,4 +1,4 @@
-import { Encounter } from "@/utils/customer";
+import { Encounter } from "@utils/customer";
 
 export default function CustomerMeetings({ customerMeetings }: any) {
   return (

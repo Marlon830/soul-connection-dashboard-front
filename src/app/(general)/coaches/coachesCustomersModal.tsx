@@ -1,5 +1,5 @@
-import { Customer } from "@/utils/customer";
-import { Employee } from "@/utils/employee";
+import { Customer } from "@utils/customer";
+import { Employee } from "@utils/employee";
 import React, { ChangeEvent } from "react";
 import Modal from "react-modal";
 

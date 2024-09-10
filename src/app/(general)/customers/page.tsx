@@ -1,13 +1,13 @@
 "use client";
 import { useState, useEffect } from 'react';
-import Spin from '@/components/spin';
-import { useCheckAuth } from '@/utils/auth';
-import CustomerSelect from '@/app/(general)/customers/customer-select';
+import Spin from '@components/spin';
+import { useCheckAuth } from '@utils/auth';
+import CustomerSelect from '@app/(general)/customers/customer-select';
 import CustomerInfo from './customer-info';
 import CustomerMeetings from './customer-meetings';
 import CustomerPayments from './customer-payments';
-import { Customer, Encounter, getCustomers, Payment } from '@/utils/customer';
-import { getImage } from '@/utils/getImage';
+import { Customer, Encounter, getCustomers, Payment } from '@utils/customer';
+import { getImage } from '@utils/getImage';
 
 const CustomersPage = () => {
   const role = useCheckAuth();

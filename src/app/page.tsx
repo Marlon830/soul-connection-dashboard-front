@@ -1,6 +1,6 @@
 "use client";
 
-import { useCheckAuth } from "@/utils/auth";
+import { useCheckAuth } from "@utils/auth";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 

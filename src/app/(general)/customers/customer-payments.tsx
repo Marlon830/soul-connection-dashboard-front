@@ -1,4 +1,4 @@
-import { Payment } from "@/utils/customer";
+import { Payment } from "@utils/customer";
 
 export default function CustomerPayments({ customerPayments }: any) {
   return (

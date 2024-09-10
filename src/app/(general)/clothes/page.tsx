@@ -2,11 +2,11 @@
 
 import CustomerSelect from "../customers/customer-select";
 import { useEffect, useState } from "react";
-import { useCheckAuth } from "@/utils/auth";
+import { useCheckAuth } from "@utils/auth";
 import Image from "next/image";
-import Spin from "@/components/spin";
-import { Clothe, Customer, getCustomers } from "@/utils/customer";
-import { getImage } from "@/utils/getImage";
+import Spin from "@components/spin";
+import { Clothe, Customer, getCustomers } from "@utils/customer";
+import { getImage } from "@utils/getImage";
 
 enum ClotheType {
   Hat = "hat/cap",

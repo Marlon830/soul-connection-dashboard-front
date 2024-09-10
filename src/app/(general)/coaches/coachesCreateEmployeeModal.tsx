@@ -1,7 +1,7 @@
 import React from 'react';
 import Modal from 'react-modal';
 import { FaEye, FaEyeSlash } from "react-icons/fa";
-import { Employee } from '@/utils/employee';
+import { Employee } from '@utils/employee';
 
 interface CreateEmployeeModalProps {
   isOpen: boolean;

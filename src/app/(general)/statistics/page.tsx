@@ -12,8 +12,8 @@ import {
   Tooltip,
   Legend,
 } from "chart.js";
-import { useCheckAuth } from "@/utils/auth";
-import Spin from "@/components/spin";
+import { useCheckAuth } from "@utils/auth";
+import Spin from "@components/spin";
 
 ChartJS.register(BarElement, CategoryScale, LinearScale, Tooltip, Legend);
 

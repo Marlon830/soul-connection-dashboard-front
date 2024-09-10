@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import nookies from 'nookies';
-import { readTokenFromCookie } from '@/utils/auth';
+import { readTokenFromCookie } from '@utils/auth';
 import { TbLogout } from 'react-icons/tb';
 import { RxHamburgerMenu } from "react-icons/rx";
 import './sidebar.css';

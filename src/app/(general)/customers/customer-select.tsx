@@ -1,5 +1,5 @@
-import { useCheckAuth } from "@/utils/auth";
-import { Customer, getCustomers } from "@/utils/customer";
+import { useCheckAuth } from "@utils/auth";
+import { Customer, getCustomers } from "@utils/customer";
 import { useState } from "react";
 
 export default function CustomerSelect({ handleSelectChange }: any) {

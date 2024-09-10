@@ -1,8 +1,8 @@
 "use client";
 
-import { Sidebar } from "@/components/sidebar";
-import Topbar from "@/components/topbar";
-import Chatbot from '@/components/chatbot';
+import { Sidebar } from "@components/sidebar";
+import Topbar from "@components/topbar";
+import Chatbot from '@components/chatbot';
 import { useState } from "react";
 
 export default function SideTopBarLayout({ children }: { children: React.ReactNode }) {

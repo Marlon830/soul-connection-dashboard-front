@@ -1,10 +1,10 @@
 "use client";
 
-import Spin from "@/components/spin";
+import Spin from "@components/spin";
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { useCheckAuth } from "@/utils/auth";
+import { useCheckAuth } from "@utils/auth";
 
 interface Tip {
   id: number;
