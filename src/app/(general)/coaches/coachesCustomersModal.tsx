@@ -1,26 +1,12 @@
+import { Customer } from "@/utils/customer";
+import { Employee } from "@/utils/employee";
 import React, { ChangeEvent } from "react";
 import Modal from "react-modal";
-
-interface Customer {
-  id: number;
-  name: string;
-  surname: string;
-  coachId: number;
-  coachName: string | null;
-}
-
-interface Coach {
-  id: number;
-  name: string;
-  surname: string;
-  birthDate: string;
-  lastConnection: string;
-}
 
 interface CustomersModalProps {
   isOpen: boolean;
   onClose: () => void;
-  selectedCoach: Coach | null;
+  selectedCoach: Employee | null;
   customers: Customer[];
   searchTerm: string;
   setSearchTerm: (term: string) => void;

@@ -3,21 +3,10 @@
 import CustomerSelect from "../customers/customer-select";
 import { useEffect, useState } from "react";
 import { useCheckAuth } from "@/utils/auth";
-import axios from "axios";
 import Image from "next/image";
 import Spin from "@/components/spin";
-
-interface Clothe {
-  id: number;
-  type: string;
-  imageId: string;
-}
-
-interface Customer {
-  id: number;
-  clothes: Array<Clothe>;
-  imageId: string;
-}
+import { Clothe, Customer, getCustomers } from "@/utils/customer";
+import { getImage } from "@/utils/getImage";
 
 enum ClotheType {
   Hat = "hat/cap",
@@ -32,7 +21,6 @@ const ClothesPage = () => {
 
   // Customers
   const [customerList, setCustomerList] = useState<Array<Customer>>([]);
-  const [selectedCustomer, setSelectedCustomer] = useState<Customer>();
 
   // Clothes
   const [hatList, setHatList] = useState<Array<Clothe>>([]);
@@ -53,39 +41,11 @@ const ClothesPage = () => {
   const [bottomImgSrc, setBottomImgSrc] = useState("");
   const [shoesImgSrc, setShoesImgSrc] = useState("");
 
-  const [isCollapsed, setIsCollapsed] = useState(false);
-
-  const getCustomers = async () => {
-    try {
-      const apiURL = role === "Coach" ? "/employees/my_clients" : "/customers/all_customers";
-      const response = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}${apiURL}`, {
-        withCredentials: true,
-      });
-      setCustomerList(response.data);
-    } catch (error) {
-      console.error("Error fetching customers:", error);
-    }
-  };
-
-  const getImage = async (imageId: string | undefined): Promise<string> => {
-    if (!imageId) return "";
-    try {
-      const response = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/images/${imageId}`, {
-        withCredentials: true,
-      });
-      return response.data;
-    } catch (error) {
-      console.error("Error fetching customer image:", error);
-    }
-    return "";
-  };
-
   const handleSelectChange = async (event: any) => {
     const customerId = event.target.value;
     const customer: Customer | undefined = customerList.find(
       (cust: Customer) => cust.id === parseInt(customerId)
     );
-    setSelectedCustomer(customer);
 
     const refreshHatList = customer?.clothes.filter((clothe: Clothe) => clothe.type === ClotheType.Hat);
     const refreshTopClotheList = customer?.clothes.filter((clothe: Clothe) => clothe.type === ClotheType.Top);
@@ -166,20 +126,16 @@ const ClothesPage = () => {
 
   useEffect(() => {
     if (role === "") return;
-    getCustomers();
+    getCustomers(role).then((customers: Array<Customer>) => setCustomerList(customers));
   }, [role]);
 
   if (role === "") {
     return (<Spin />);
   }
 
-  const handleCollapseChange = (collapsed: any) => {
-    setIsCollapsed(collapsed);
-  };
-
   return (
     <div>
-      <CustomerSelect customerList={customerList} handleSelectChange={handleSelectChange} />
+      <CustomerSelect handleSelectChange={handleSelectChange} />
       <div>
         <div className="flex justify-center">
           {hatList.length > 1 && (

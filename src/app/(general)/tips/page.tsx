@@ -15,7 +15,6 @@ interface Tip {
 const TipsPage = () => {
   const workName = useCheckAuth();
   const [tipsList, setTipsList] = useState<Array<Tip>>([]);
-  const [isCollapsed, setIsCollapsed] = useState(false);
 
   useEffect(() => {
     if (workName === "") return;
@@ -36,10 +35,6 @@ const TipsPage = () => {
   if (workName === "") {
     return <Spin />;
   }
-
-  const handleCollapseChange = (collapsed: any) => {
-    setIsCollapsed(collapsed);
-  };
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12 mt-8">

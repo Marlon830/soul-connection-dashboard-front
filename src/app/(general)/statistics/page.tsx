@@ -31,7 +31,6 @@ const StatisticsPage = () => {
   const router = useRouter();
   const workName = useCheckAuth();
   const [loading, setLoading] = useState(true);
-  const [isCollapsed, setIsCollapsed] = useState(false);
   const [statistics, setStatistics] = useState<CoachStatistic[]>([]);
 
   const [clientsSortOption, setClientsSortOption] = useState("alphabetic");
@@ -152,10 +151,6 @@ const StatisticsPage = () => {
     "Number of Events",
     "rgba(54, 162, 235, 0.6)"
   );
-
-  const handleCollapseChange = (collapsed: any) => {
-    setIsCollapsed(collapsed);
-  };
 
   return (
     <div>

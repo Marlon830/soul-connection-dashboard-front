@@ -2,36 +2,12 @@
 import { useState, useEffect } from 'react';
 import Spin from '@/components/spin';
 import { useCheckAuth } from '@/utils/auth';
-import axios from 'axios';
 import CustomerSelect from '@/app/(general)/customers/customer-select';
 import CustomerInfo from './customer-info';
 import CustomerMeetings from './customer-meetings';
 import CustomerPayments from './customer-payments';
-
-interface Payment {
-  date: string;
-  payment_method: string;
-  amount: number;
-  comment: string;
-}
-
-interface Encounter {
-  date: string;
-  rating: number;
-  comment: string;
-  source: string;
-}
-
-interface Customer {
-  id: number;
-  name: string;
-  surname: string;
-  birth_date: string;
-  imageId: string;
-  payments: Array<Payment>;
-  encounters: Array<Encounter>;
-  address: string;
-}
+import { Customer, Encounter, getCustomers, Payment } from '@/utils/customer';
+import { getImage } from '@/utils/getImage';
 
 const CustomersPage = () => {
   const role = useCheckAuth();
@@ -40,37 +16,11 @@ const CustomersPage = () => {
   const [customerPayments, setCustomerPayments] = useState<Array<Payment>>([]);
   const [customerMeetings, setCustomerMeetings] = useState<Array<Encounter>>([]);
   const [customerImage, setCustomerImage] = useState("");
-  const [isCollapsed, setIsCollapsed] = useState(false);
-
-  const getCustomers = async () => {
-    try {
-      const apiURL = role === "Coach" ? "/employees/my_clients" : "/customers/all_customers";
-      const response = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}${apiURL}`, {
-        withCredentials: true,
-      });
-      setCustomerList(response.data);
-    } catch (error) {
-      console.error("Error fetching customers:", error);
-    }
-  };
-
-  const getImage = async (imageId: string | undefined): Promise<string> => {
-    if (!imageId) return "";
-    try {
-      const response = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/images/${imageId}`, {
-        withCredentials: true,
-      });
-      return response.data;
-    } catch (error) {
-      console.error("Error fetching customer image:", error);
-    }
-    return "";
-  };
 
   // Utilise useEffect pour récupérer les données des clients quand le composant est monté
   useEffect(() => {
     if (role === "") return;
-    getCustomers();
+    getCustomers(role).then((data) => setCustomerList(data));
   }, [role]);
 
   // Fonction pour gérer la sélection d'un client
@@ -93,13 +43,9 @@ const CustomersPage = () => {
     return (<Spin />);
   }
 
-  const handleCollapseChange = (collapsed: any) => {
-    setIsCollapsed(collapsed);
-  };
-
   return (
     <div>
-      <CustomerSelect customerList={customerList} handleSelectChange={handleSelectChange} />
+      <CustomerSelect handleSelectChange={handleSelectChange} />
       {selectedCustomer && (
         <div className="mt-6 flex space-x-6">
           <div className="flex-1 p-6 bg-gray-50 rounded-lg shadow-inner">

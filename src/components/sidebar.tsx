@@ -9,6 +9,10 @@ import { TbLogout } from 'react-icons/tb';
 import { RxHamburgerMenu } from "react-icons/rx";
 import './sidebar.css';
 
+interface SidebarProps {
+  onCollapseChange: () => void;
+}
+
 const routes = [
   {
     displayName: 'Home',
@@ -60,7 +64,7 @@ const routes = [
   },
 ];
 
-export default function Sidebar({ onCollapseChange }) {
+export const Sidebar: React.FC<SidebarProps> = ({ onCollapseChange }) => {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const router = useRouter();
   const token = readTokenFromCookie();
@@ -76,7 +80,7 @@ export default function Sidebar({ onCollapseChange }) {
   };
 
   return (
-    <div className={`bg-white h-screen ${isCollapsed ? 'w-20' : 'w-64'} ${isCollapsed ? 'items-center' : ''} border border-gray-200 shadow-md rounded-lg p-8 fixed flex flex-col justify-between transition-width duration-300 ease-in-out`}>
+    <div className={`bg-white h-screen ${isCollapsed ? 'w-20' : 'w-64'} ${isCollapsed ? 'items-center' : ''} border border-gray-200 shadow-md rounded-lg p-8 fixed flex flex-col justify-between transition-width duration-300 ease-in-out z-50`}>
       <button
         onClick={handleCollapseToggle}
         className="focus:outline-none text-black w-fit"

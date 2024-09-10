@@ -13,57 +13,51 @@ import Spin from "@/components/spin";
 import CustomersModal from './coachesCustomersModal';
 import CreateEmployeeModal from './coachesCreateEmployeeModal';
 import DeleteCoachModal from './coachesDeleteCoachModal';
+import { Customer } from '@/utils/customer';
+import { Employee } from '@/utils/employee';
 
-// Define types for Coach and Customer
-interface Coach {
-  id: number;
+interface EmployeeError {
+  email: string;
+  password: string;
   name: string;
   surname: string;
-  birthDate: string;
-  lastConnection: string;
-}
-
-interface Customer {
-  id: number;
-  name: string;
-  surname: string;
-  coachId: number;
-  coachName: string | null;
+  birth_date: string;
+  work: string;
 }
 
 const AccountManagement: React.FC = () => {
   const router = useRouter();
   const workName = useCheckAuth();
 
-  const [coaches, setCoaches] = useState<Coach[]>([]);
+  const [coaches, setCoaches] = useState<Employee[]>([]);
   const [customers, setCustomers] = useState<Customer[]>([]);
   const [isCustomerModalOpen, setIsCustomerModalOpen] = useState(false);
-  const [selectedCoach, setSelectedCoach] = useState<Coach | null>(null);
+  const [selectedCoach, setSelectedCoach] = useState<Employee | null>(null);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-  const [coachToDelete, setCoachToDelete] = useState<Coach | null>(null);
+  const [coachToDelete, setCoachToDelete] = useState<Employee | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
 
   // State for employee creation modal
   const [isCreateEmployeeModalOpen, setIsCreateEmployeeModalOpen] = useState(false);
-  const [newEmployee, setNewEmployee] = useState({
+  const [newEmployee, setNewEmployee] = useState<Employee>({
+    id: 0,
     email: '',
     password: '',
     name: '',
     surname: '',
-    birthDate: '',
+    birth_date: '',
     gender: 'Male',
     work: '',
   });
-  const [errors, setErrors] = useState({
+  const [errors, setErrors] = useState<EmployeeError>({
     email: "",
     password: "",
     name: "",
     surname: "",
-    birthDate: "",
+    birth_date: "",
     work: "",
   });
   const [showPassword, setShowPassword] = useState(false);
-  const [isCollapsed, setIsCollapsed] = useState(false);
 
   useEffect(() => {
     if (workName === '') return;
@@ -82,11 +76,11 @@ const AccountManagement: React.FC = () => {
             id: employee.id,
             name: employee.name,
             surname: employee.surname,
-            birthDate: employee.birth_date.split('-').reverse().join('-'),
-            lastConnection: employee.lastConnection?.toString().split('T')[0].split('-').reverse().join('-') || 'N/A',
+            birth_date: employee.birth_date,
+            lastConnection: employee.lastConnection,
           };
         });
-        filteredEmployees.sort((a: Coach, b: Coach) => a.id - b.id);
+        filteredEmployees.sort((a: Employee, b: Employee) => a.id - b.id);
         setCoaches(filteredEmployees);
       } catch (error) {
         console.error('Error fetching coaches:', error);
@@ -122,7 +116,7 @@ const AccountManagement: React.FC = () => {
     return null;
   }
 
-  const openDeleteModal = (coach: Coach) => {
+  const openDeleteModal = (coach: Employee) => {
     setCoachToDelete(coach);
     setIsDeleteModalOpen(true);
   };
@@ -147,7 +141,7 @@ const AccountManagement: React.FC = () => {
     }
   };
 
-  const openModal = (coach: Coach) => {
+  const openModal = (coach: Employee) => {
     setSelectedCoach(coach);
     setIsCustomerModalOpen(true);
   };
@@ -169,11 +163,11 @@ const AccountManagement: React.FC = () => {
     try {
       await axios.put(`${process.env.NEXT_PUBLIC_BACKEND_URL}/employees/${newCoachId}/assign_client/${customerId}`, {}, { withCredentials: true });
 
-      setCustomers((prevCustomers) =>
-        prevCustomers.map((c) =>
-          c.id === customerId ? { ...c, coachId: newCoachId === 0 ? null : newCoachId } : c
-        )
-      );
+      const updatedCustomer: Customer[] = customers.map((c) =>
+        c.id === customerId ? { ...c, coachId: newCoachId === 0 ? null : newCoachId } : c
+      ) as Customer[];
+
+      setCustomers(updatedCustomer);
     } catch (error) {
       console.error('Error assigning/retiring customer:', error);
     }
@@ -230,7 +224,7 @@ const AccountManagement: React.FC = () => {
           error = "Surname is required.";
         }
         break;
-      case "birthDate":
+      case "birth_date":
         if (!value) {
           error = "Birth Date is required.";
         }
@@ -256,8 +250,8 @@ const AccountManagement: React.FC = () => {
 
   const handleCreateEmployeeSubmit = async () => {
     const newErrors = Object.keys(newEmployee).reduce((acc, key) => {
-      const error = validateField(key, newEmployee[key as keyof typeof newEmployee]);
-      if (error) acc[key as keyof typeof newEmployee] = error;
+      const error = validateField(key, (newEmployee[key as keyof typeof newEmployee]) as string);
+      if (error) acc[key as keyof EmployeeError] = error;
       return acc;
     }, {} as typeof errors);
 
@@ -272,11 +266,12 @@ const AccountManagement: React.FC = () => {
       const response = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/register`, newEmployee, { withCredentials: true });
       if (response.status === 200) {
         setNewEmployee({
+          id: 0,
           email: '',
           password: '',
           name: '',
           surname: '',
-          birthDate: '',
+          birth_date: '',
           gender: 'Male',
           work: '',
         });
@@ -285,7 +280,7 @@ const AccountManagement: React.FC = () => {
           password: "",
           name: "",
           surname: "",
-          birthDate: "",
+          birth_date: "",
           work: "",
         });
         closeCreateEmployeeModal();
@@ -298,11 +293,11 @@ const AccountManagement: React.FC = () => {
             id: employee.id,
             name: employee.name,
             surname: employee.surname,
-            birthDate: employee.birth_date.split('-').reverse().join('-'),
-            lastConnection: employee.last_connection || 'N/A',
+            birth_date: employee.birth_date,
+            lastConnection: employee.lastConnection || 'N/A',
           };
         });
-        filteredEmployees.sort((a: Coach, b: Coach) => a.id - b.id);
+        filteredEmployees.sort((a: Employee, b: Employee) => a.id - b.id);
         setCoaches(filteredEmployees);
       } else {
         toast.error(`Error creating employee: ${response.data.message || "Unknown error"}`);
@@ -318,15 +313,11 @@ const AccountManagement: React.FC = () => {
 
   const isFormValid = Object.values(errors).every((error) => !error) && Object.values(newEmployee).every((value) => value);
 
-  const handleCollapseChange = (collapsed: any) => {
-    setIsCollapsed(collapsed);
-  };
-
   return (
     <div>
       <ToastContainer position="top-right" autoClose={5000} hideProgressBar={false} closeOnClick pauseOnHover draggable={false} pauseOnFocusLoss />
-
-      <div className="flex justify-end">
+  
+      <div className="flex sm:justify-end justify-start">
         <button
           onClick={openCreateEmployeeModal}
           className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 mb-4"
@@ -334,46 +325,48 @@ const AccountManagement: React.FC = () => {
           Create Employee
         </button>
       </div>
-
-      <table className="min-w-full bg-white border border-gray-200">
-        <thead>
-          <tr className="bg-blue-500 text-white">
-            <th className="py-2 px-4 border-b">#</th>
-            <th className="py-2 px-4 border-b">Name</th>
-            <th className="py-2 px-4 border-b">Birth Date</th>
-            <th className="py-2 px-4 border-b">Customers</th>
-            <th className="py-2 px-4 border-b">Last connection</th>
-            <th className="py-2 px-4 border-b"></th>
-          </tr>
-        </thead>
-        <tbody>
-          {coaches.map((coach) => (
-            <tr key={coach.id} className="bg-gray-100 even:bg-gray-200">
-              <td className="py-2 px-4 border-b text-black text-center">{coach.id}</td>
-              <td className="py-2 px-4 border-b text-black text-center">{coach.name} {coach.surname}</td>
-              <td className="py-2 px-4 border-b text-black text-center">{coach.birthDate}</td>
-              <td className="py-2 px-4 border-b text-center">
-                <button
-                  onClick={() => openModal(coach)}
-                  className="text-blue-500 hover:underline"
-                >
-                  Edit list...
-                </button>
-              </td>
-              <td className="py-2 px-4 border-b text-black text-center">{coach.lastConnection}</td>
-              <td className="py-2 px-4 border-b text-center">
-                <button
-                  onClick={() => openDeleteModal(coach)}
-                  className="text-white bg-red-500 p-3 rounded-lg hover:bg-red-600 transition-colors transform hover:scale-105 duration-300 ease-in-out"
-                >
-                  <FaTrashAlt />
-                </button>
-              </td>
+  
+      <div className="">
+        <table className="w-full bg-white border border-gray-200 table-fixed">
+          <thead>
+            <tr className="bg-blue-500 text-white">
+              <th className="sm:py-2 sm:px-4 py-0.5 px-1 sm:text-base text-xs border-b" style={{ wordWrap: 'break-word' }}>#</th>
+              <th className="sm:py-2 sm:px-4 py-0.5 px-1 sm:text-base text-xs border-b" style={{ wordWrap: 'break-word' }}>Name</th>
+              <th className="sm:py-2 sm:px-4 py-0.5 px-1 sm:text-base text-xs border-b" style={{ wordWrap: 'break-word' }}>Birth Date</th>
+              <th className="sm:py-2 sm:px-4 py-0.5 px-1 sm:text-base text-xs border-b" style={{ wordWrap: 'break-word' }}>Customers</th>
+              <th className="sm:py-2 sm:px-4 py-0.5 px-1 sm:text-base text-xs border-b" style={{ wordWrap: 'break-word' }}>Last connection</th>
+              <th className="sm:py-2 sm:px-4 py-0.5 px-1 sm:text-base text-xs border-b" style={{ wordWrap: 'break-word' }}></th>
             </tr>
-          ))}
-        </tbody>
-      </table>
-
+          </thead>
+          <tbody>
+            {coaches.map((coach) => (
+              <tr key={coach.id} className="bg-gray-100 even:bg-gray-200">
+                <td className="sm:py-2 sm:px-4 py-0.5 px-1 sm:text-base text-xs border-b text-black text-center" style={{ wordWrap: 'break-word' }}>{coach.id}</td>
+                <td className="sm:py-2 sm:px-4 py-0.5 px-1 sm:text-base text-xs border-b text-black text-center" style={{ wordWrap: 'break-word' }}>{coach.name} {coach.surname}</td>
+                <td className="sm:py-2 sm:px-4 py-0.5 px-1 sm:text-base text-xs border-b text-black text-center" style={{ wordWrap: 'break-word' }}>{coach.birth_date.split('-').reverse().join('-')}</td>
+                <td className="sm:py-2 sm:px-4 py-0.5 px-1 sm:text-base text-xs border-b text-center" style={{ wordWrap: 'break-word' }}>
+                  <button
+                    onClick={() => openModal(coach)}
+                    className="text-blue-500 hover:underline"
+                  >
+                    Edit list...
+                  </button>
+                </td>
+                <td className="sm:py-2 sm:px-4 py-0.5 px-1 sm:text-base text-xs border-b text-black text-center" style={{ wordWrap: 'break-word' }}>{coach.lastConnection?.toString().split('T')[0].split('-').reverse().join('-') || 'N/A'}</td>
+                <td className="sm:py-2 sm:px-4 py-0.5 px-1 sm:text-base text-xs border-b text-center" style={{ wordWrap: 'break-word' }}>
+                  <button
+                    onClick={() => openDeleteModal(coach)}
+                    className="text-white bg-red-500 sm:p-3 p-2 rounded-lg hover:bg-red-600 transition-colors transform hover:scale-105 duration-300 ease-in-out"
+                  >
+                    <FaTrashAlt />
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+  
       {selectedCoach && (
         <CustomersModal
           isOpen={isCustomerModalOpen}
@@ -386,7 +379,7 @@ const AccountManagement: React.FC = () => {
           handleToggleCustomer={handleToggleCustomer}
         />
       )}
-
+  
       <CreateEmployeeModal
         isOpen={isCreateEmployeeModalOpen}
         onClose={closeCreateEmployeeModal}
@@ -398,7 +391,7 @@ const AccountManagement: React.FC = () => {
         handleCreateEmployeeSubmit={handleCreateEmployeeSubmit}
         isFormValid={isFormValid}
       />
-
+  
       <DeleteCoachModal
         isOpen={isDeleteModalOpen}
         onClose={closeDeleteModal}

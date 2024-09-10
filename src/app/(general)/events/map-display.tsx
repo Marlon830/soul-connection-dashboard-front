@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { MapContainer, TileLayer, Marker, useMap } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
+import { EmployeeEvent } from "@/utils/employee";
 
 const MoveMapToEvent = ({ location }: { location: [number, number] | null }) => {
   const map = useMap();
@@ -14,7 +15,7 @@ const MoveMapToEvent = ({ location }: { location: [number, number] | null }) => 
   return null;
 };
 
-export default function MapDisplay({ selectedLocation, eventsData }: { selectedLocation: [number, number] | null, eventsData: Event[] }) {
+export default function MapDisplay({ selectedLocation, eventsData }: { selectedLocation: [number, number] | null, eventsData: EmployeeEvent[] }) {
   if (!eventsData) return null;
   return (
     <div className="flex-1 mr-4">

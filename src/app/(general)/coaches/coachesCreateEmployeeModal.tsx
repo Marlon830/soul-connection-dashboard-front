@@ -1,25 +1,18 @@
 import React from 'react';
 import Modal from 'react-modal';
 import { FaEye, FaEyeSlash } from "react-icons/fa";
+import { Employee } from '@/utils/employee';
 
 interface CreateEmployeeModalProps {
   isOpen: boolean;
   onClose: () => void;
-  newEmployee: {
-    email: string;
-    password: string;
-    name: string;
-    surname: string;
-    birthDate: string;
-    gender: string;
-    work: string;
-  };
+  newEmployee: Employee;
   errors: {
     email: string;
     password: string;
     name: string;
     surname: string;
-    birthDate: string;
+    birth_date: string;
     work: string;
   };
   showPassword: boolean;
@@ -122,13 +115,13 @@ const CreateEmployeeModal: React.FC<CreateEmployeeModalProps> = ({
         <label className="block text-black">Birth Date</label>
         <input
           type="date"
-          name="birthDate"
-          value={newEmployee.birthDate}
+          name="birth_date"
+          value={newEmployee.birth_date}
           onChange={handleCreateEmployeeChange}
           className="p-2 border border-gray-300 rounded text-black"
           required
         />
-        {errors.birthDate && <p className="text-red-500 text-sm">{errors.birthDate}</p>}
+        {errors.birth_date && <p className="text-red-500 text-sm">{errors.birth_date}</p>}
 
         <label className="block text-black">Gender</label>
         <select

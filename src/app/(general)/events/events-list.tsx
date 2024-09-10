@@ -1,4 +1,6 @@
-export default function EventsList({ eventsData, setSelectedLocation }: { eventsData: Event[], setSelectedLocation: Function }) {
+import { EmployeeEvent } from "@/utils/employee";
+
+export default function EventsList({ eventsData, setSelectedLocation }: { eventsData: EmployeeEvent[], setSelectedLocation: Function }) {
   if (!eventsData) return null;
   return (
     <div className="w-96 overflow-y-auto max-h-screen pl-4">

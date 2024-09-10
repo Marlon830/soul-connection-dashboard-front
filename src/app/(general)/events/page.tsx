@@ -7,6 +7,7 @@ import axios from "axios";
 import "leaflet/dist/leaflet.css";
 import MapDisplay from "./map-display";
 import EventsList from "./events-list";
+import { EmployeeEvent } from "@/utils/employee";
 
 delete L.Icon.Default.prototype._getIconUrl;
 L.Icon.Default.mergeOptions({
@@ -17,7 +18,7 @@ L.Icon.Default.mergeOptions({
 
 const EventsPage = () => {
   const role = useCheckAuth();
-  const [eventsData, setEventsData] = useState<Event[]>([]);
+  const [eventsData, setEventsData] = useState<EmployeeEvent[]>([]);
   const [selectedLocation, setSelectedLocation] = useState<[number, number] | null>(null);
 
   const getEvents = async () => {

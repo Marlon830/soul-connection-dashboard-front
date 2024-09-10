@@ -1,56 +1,36 @@
 "use client";
+
 import { useState, useEffect } from 'react';
 import Spin from '@/components/spin';
 import { useCheckAuth } from '@/utils/auth';
-import { checkCompatibility } from './astroCompatibility';
-import axios from 'axios';
+import { checkCompatibility, ZodiacSign } from '@/utils/astroCompatibility';
+import { Customer, getCustomers } from '@/utils/customer';
+import CustomerSelect from '../customers/customer-select';
 
 const AstroPage = () => {
   const role = useCheckAuth();
-  const [customersData, setCustomersData] = useState([]);
-  const [selectedCustomer1, setSelectedCustomer1] = useState(null);
-  const [selectedCustomer2, setSelectedCustomer2] = useState(null);
-  const [customer1Astro, setCustomer1Astro] = useState(null);
-  const [customer2Astro, setCustomer2Astro] = useState(null);
-  const [compatibility, setCompatibility] = useState(null);
-
-  const getCustomers = async () => {
-    try {
-      const url = role === "Coach"
-        ? `${process.env.NEXT_PUBLIC_BACKEND_URL}/employees/my_clients`
-        : `${process.env.NEXT_PUBLIC_BACKEND_URL}/customers/all_customers`;
-      const response = await axios.get(url, { withCredentials: true });
-      setCustomersData(response.data);
-    } catch (error) {
-      console.error("Error fetching customers:", error);
-    }
-  };
-
-  const getAstro = async (customerId: number) => {
-    return customersData.find(cust => cust.id === customerId)?.astrological_sign;
-  };
+  const [customerList, setCustomerList] = useState<Array<Customer>>([]);
+  const [customer1Astro, setCustomer1Astro] = useState<ZodiacSign | undefined>();
+  const [customer2Astro, setCustomer2Astro] = useState<ZodiacSign | undefined>();
+  const [compatibility, setCompatibility] = useState<number | undefined>();
 
   useEffect(() => {
     if (role === "") return;
-    getCustomers();
+    getCustomers(role).then((customers: Array<Customer>) => setCustomerList(customers));
   }, [role]);
 
   const handleSelect1Change = async (event: any) => {
     const customerId = event.target.value;
-    const customer = customersData.find(cust => cust.id === parseInt(customerId));
-    setSelectedCustomer1(customer);
+    const customer = customerList.find(cust => cust.id === parseInt(customerId));
 
-    const astro_sign = await getAstro(parseInt(customerId));
-    setCustomer1Astro(astro_sign);
+    setCustomer1Astro(customer?.astrological_sign);
   };
 
   const handleSelect2Change = async (event: any) => {
     const customerId = event.target.value;
-    const customer = customersData.find(cust => cust.id === parseInt(customerId));
-    setSelectedCustomer2(customer);
+    const customer = customerList.find(cust => cust.id === parseInt(customerId));
 
-    const astro_sign = await getAstro(parseInt(customerId));
-    setCustomer2Astro(astro_sign);
+    setCustomer2Astro(customer?.astrological_sign);
   };
 
   const getCompatibility = () => {
@@ -71,59 +51,28 @@ const AstroPage = () => {
       </h2>
       <div className="flex justify-center space-x-4">
         {/* Sélecteur Client 1 */}
-        <div className="flex-1 flex flex-col justify-center items-center">
-          <label htmlFor="customer1" className="block text-gray-700 mb-2">Client 1</label>
-          <select
-            id="customer1"
-            value={selectedCustomer1?.id || ''}
-            onChange={handleSelect1Change}
-            className="p-2 border border-gray-300 rounded-lg text-black">
-            <option value="">select a customer</option>
-            {customersData.map(customer => (
-              <option key={customer.id} value={customer.id}>
-                {customer.name} {customer.surname}
-              </option>
-            ))}
-          </select>
+        <div>
+          <CustomerSelect handleSelectChange={handleSelect1Change} />
           {customer1Astro && (
-            <p className="mt-2 text-gray-600">Astrological Sign : {customer1Astro}</p>
+            <p className="text-gray-500 text-center mt-2">
+              Sign: {customer1Astro}
+            </p>
           )}
         </div>
 
         {/* Sélecteur Client 2 */}
-        <div className="flex-1 flex flex-col justify-center items-center">
-          <label htmlFor="customer2" className="block text-gray-700 mb-2">Client 2</label>
-          <select
-            id="customer2"
-            value={selectedCustomer2?.id || ''}
-            onChange={handleSelect2Change}
-            className="p-2 border border-gray-300 rounded-lg text-black">
-            <option value="">select a customer</option>
-            {customersData.map(customer => (
-              <option key={customer.id} value={customer.id}>
-                {customer.name} {customer.surname}
-              </option>
-            ))}
-          </select>
+        <div>
+          <CustomerSelect handleSelectChange={handleSelect2Change} />
           {customer2Astro && (
-            <p className="mt-2 text-gray-600">Astrological Sign : {customer2Astro}</p>
+            <p className="text-gray-500 text-center mt-2">
+              Sign: {customer2Astro}
+            </p>
           )}
         </div>
-      </div>
 
-      {/* Bouton Test de compatibilité */}
-      <div className="mt-8 text-center">
-        <button
-          onClick={getCompatibility}
-          className="px-6 py-3 bg-pink-400 text-white font-bold rounded-lg hover:bg-pink-600 transition duration-300">
-          Test Compatibility
-        </button>
-      </div>
-
-      {/* Résultat */}
-      {
-        compatibility && (
-          <div className="mt-8 text-center relative w-80 h-80 mx-auto">
+        {/* Résultat */}
+        {compatibility && (
+          <div className="mt-8 text-center relative w-full sm:w-80 h-80 mx-auto">
             {/* Image du coeur */}
             <img
               src="/coeur.png"
@@ -132,7 +81,7 @@ const AstroPage = () => {
             />
             {/* Texte du pourcentage centré par-dessus */}
             <div className="absolute inset-0 flex items-center justify-center ml-5 mb-7">
-              <p className="text-8xl font-bold text-pink-400 font-filxgirl">
+              <p className="text-4xl sm:text-8xl font-bold text-pink-400 font-filxgirl">
                 {compatibility}%
               </p>
             </div>
@@ -143,20 +92,20 @@ const AstroPage = () => {
                 <img
                   src="/cry.gif"
                   alt="crying"
-                  className="w-20 h-20 mt-4"
+                  className="w-10 sm:w-20 h-10 sm:h-20 mt-4"
                 />
               ) : (
                 <img
                   src="/love.gif"
                   alt="love"
-                  className="w-20 h-20 mt-4"
+                  className="w-10 sm:w-20 h-10 sm:h-20 mt-4"
                 />
               )}
             </div>
           </div>
-        )
-      }
-    </div >
+        )}
+      </div>
+    </div>
   );
 };
 

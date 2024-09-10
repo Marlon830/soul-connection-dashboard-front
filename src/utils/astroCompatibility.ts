@@ -1,4 +1,7 @@
-const zodiacElements = {
+export type ZodiacSign = 'Aries' | 'Taurus' | 'Gemini' | 'Cancer' | 'Leo' | 'Virgo' | 'Libra' | 'Scorpio' | 'Sagittarius' | 'Capricorn' | 'Aquarius' | 'Pisces';
+type ZodiacElement = 'Fire' | 'Earth' | 'Air' | 'Water';
+
+const zodiacElements: Record<ZodiacSign, ZodiacElement> = {
     'Aries': 'Fire',
     'Taurus': 'Earth',
     'Gemini': 'Air',
@@ -13,14 +16,15 @@ const zodiacElements = {
     'Pisces': 'Water'
 };
 
-const elementsCompatibilityMatrix = {
+const elementsCompatibilityMatrix: Record<ZodiacElement, ZodiacElement[]> = {
     'Fire': ['Fire', 'Air'],
     'Earth': ['Earth', 'Water'],
     'Air': ['Air', 'Fire'],
     'Water': ['Water', 'Earth']
 };
 
-const zodiacCompatibility = {
+
+const zodiacCompatibility: Record<ZodiacSign, ZodiacSign[]> = {
     'Aries': ['Leo', 'Sagittarius', 'Gemini', 'Aquarius'],
     'Taurus': ['Virgo', 'Capricorn', 'Pisces', 'Cancer'],
     'Gemini': ['Libra', 'Aquarius', 'Aries', 'Leo'],
@@ -36,11 +40,11 @@ const zodiacCompatibility = {
 };
 
 
-const yinSigns = ['Taurus', 'Cancer', 'Virgo', 'Scorpio', 'Capricorn', 'Pisces'];
-const yangSigns = ['Aries', 'Gemini', 'Leo', 'Libra', 'Sagittarius', 'Aquarius'];
+const yinSigns: ZodiacSign[] = ['Taurus', 'Cancer', 'Virgo', 'Scorpio', 'Capricorn', 'Pisces'];
+const yangSigns: ZodiacSign[] = ['Aries', 'Gemini', 'Leo', 'Libra', 'Sagittarius', 'Aquarius'];
 
 
-function ElementaryCompatibility(zodiac1: string, zodiac2: string) {
+function ElementaryCompatibility(zodiac1: ZodiacSign, zodiac2: ZodiacSign) {
     const element1 = zodiacElements[zodiac1];
     const element2 = zodiacElements[zodiac2];
 
@@ -52,7 +56,7 @@ function ElementaryCompatibility(zodiac1: string, zodiac2: string) {
     return -15;
 }
 
-function ZodiacCompatibility(zodiac1: string, zodiac2: string) {
+function ZodiacCompatibility(zodiac1: ZodiacSign, zodiac2: ZodiacSign) {
     if (zodiacCompatibility[zodiac1].includes(zodiac2)) {
         return 10;
     } else {
@@ -60,7 +64,7 @@ function ZodiacCompatibility(zodiac1: string, zodiac2: string) {
     }
 }
 
-function YinYangCompatibility(zodiac1: string, zodiac2: string) {
+function YinYangCompatibility(zodiac1: ZodiacSign, zodiac2: ZodiacSign) {
     const iszodiac1Yin = yinSigns.includes(zodiac1);
     const iszodiac2Yin = yinSigns.includes(zodiac2);
 
@@ -71,8 +75,9 @@ function YinYangCompatibility(zodiac1: string, zodiac2: string) {
     return -10;
 }
 
-export function checkCompatibility(zodiac1: string, zodiac2: string) {
+export function checkCompatibility(zodiac1: ZodiacSign, zodiac2: ZodiacSign) {
     let compatibility = 50;
+
     compatibility += ElementaryCompatibility(zodiac1, zodiac2);
     compatibility += ZodiacCompatibility(zodiac1, zodiac2);
     compatibility += YinYangCompatibility(zodiac1, zodiac2);
